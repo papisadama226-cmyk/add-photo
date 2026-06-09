@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PWA Formulaire WhatsApp</title>
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="PWA: Envoi rapide vers WhatsApp avec photo, nom, numéro et message." />
+
+  <!-- Manifest (data URL pour rester en un seul fichier) -->
+  <link rel="manifest" id="manifest-link" />
+
+  <!-- Icône applis/Apple -->
+  <link rel="apple-touch-icon" href="[i.ibb.co](https://i.ibb.co/hVhf8rM/profile512.png)" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #0f172a;
+      --soft: #111827;
+      --accent: #0ea5e9;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --danger: #ef4444;
+      --ok: #22c55e;
+      --focus: 0 0 0 3px rgba(14,165,233,.35);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(160deg, #0b1220 0%, #0a122a 50%, #0b1220 100%);
+      color: var(--text);
+      display: grid;
+      place-items: start center;
+      padding: 24px 16px 80px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 6px 0 18px;
+      width: 100%;
+      max-width: 760px;
+    }
+    header img.logo {
+      width: 48px; height: 48px; border-radius: 12px; object-fit: cover;
+      box-shadow: 0 6px 18px rgba(14,165,233,.25);
+    }
+    header h1 {
+      font-size: 20px; margin: 0; line-height: 1.15; font-weight: 700;
+      letter-spacing: .2px;
+    }
+    header p {
+      margin: 0; color: var(--muted); font-size: 13px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border: 1px solid rgba(148,163,184,.12);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(2,6,23,.55), inset 0 1px 0 rgba(255,255,255,.04);
+      padding: 20px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 720px) {
+      .grid-2 { grid-template-columns: 1.2fr 2fr; }
+    }
+
+    label { font-size: 13px; color: var(--muted); margin-bottom: 6px; display: inline-block; }
+    .field {
+      background: var(--panel);
+      border: 1px solid rgba(148,163,184,.16);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border .2s ease, background .2s ease, transform .05s ease;
+    }
+    .field:focus-within {
+      border-color: rgba(14,165,233,.6);
+      box-shadow: var(--focus);
+    }
+    input[type="text"],
+    input[type="tel"],
+    textarea,
+    select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.4;
+      resize: vertical;
+    }
+    textarea { min-height: 96px; }
+
+    .preview {
+      display: grid; place-items: center; aspect-ratio: 1/1;
+      background: linear-gradient(180deg, #0a1226, #0e1630);
+      border: 1px dashed rgba(148,163,184,.28);
+      border-radius: 16px;
+      position: relative; overflow: hidden;
+    }
+    .preview img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .preview .hint {
+      position: absolute; bottom: 10px; left: 10px; right: 10px;
+      color: var(--muted); font-size: 12px; background: rgba(2,6,23,.6);
+      padding: 6px 8px; border-radius: 8px; backdrop-filter: blur(6px);
+    }
+    .uploader {
+      display: grid; gap: 10px;
+    }
+    .row {
+      display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center;
+    }
+    @media (max-width: 480px) {
+      .row { grid-template-columns: 1fr; }
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px; border: none; cursor: pointer;
+      font-weight: 700; letter-spacing: .2px;
+      border-radius: 12px; padding: 12px 14px; font-size: 15px;
+      transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: linear-gradient(180deg, #10b981, #0ea5e9);
+      color: #0b1220;
+      box-shadow: 0 10px 30px rgba(14,165,233,.35), inset 0 1px 0 rgba(255,255,255,.5);
+    }
+    .btn-secondary {
+      background: #132036; color: #dbeafe; border: 1px solid rgba(148,163,184,.18);
+    }
+    .note { color: var(--muted); font-size: 12px; }
+    .error { color: var(--danger); font-size: 13px; margin-top: 6px; }
+    .ok { color: var(--ok); font-size: 13px; margin-top: 6px; }
+    .footer {
+      display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+      align-items: center; margin-top: 8px;
+    }
+    .flag {
+      width: 18px; height: 12px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(148,163,184,.25) inset;
+      object-fit: cover;
+    }
+    .caps { text-transform: uppercase; font-weight: 700; color: #93c5fd; font-size: 12px; letter-spacing: .5px; }
+    .tiny { font-size: 11px; color: var(--muted); }
+    .spacer { height: 6px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" alt="Logo PWA" src="[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)" />
+    <div>
+      <h1>Envoi WhatsApp — Formulaire PWA</h1>
+      <p>Ajoutez sur l’écran d’accueil pour un accès instantané, même hors ligne.</p>
+    </div>
+  </header>
+
+  <main class="card" aria-labelledby="form-title">
+    <form id="wa-form" novalidate>
+      <div class="grid-2">
+        <!-- Bloc Image -->
+        <div class="uploader">
+          <label for="photo">Photo</label>
+          <div class="preview" id="photoPreview" aria-live="polite">
+            <div class="caps" style="opacity:.85">Aperçu</div>
+            <div class="hint">Importez une image (JPG/PNG, max ~3 Mo). Elle n’est pas envoyée à WhatsApp, mais peut être sauvegardée localement.</div>
+          </div>
+          <div class="row">
+            <input type="file" id="photo" accept="image/*" />
+            <button class="btn btn-secondary" type="button" id="clearPhoto">Effacer</button>
+          </div>
+          <div class="tiny">Astuce: l’image est stockée localement (cache PWA) pour réutilisation rapide.</div>
+          <div class="spacer"></div>
+        </div>
+
+        <!-- Bloc Champs -->
+        <div>
+          <div>
+            <label for="name">Nom</label>
+            <div class="field"><input id="name" type="text" placeholder="Ex: Aïcha Koné" autocomplete="name" required /></div>
+            <div id="nameErr" class="error hidden">Veuillez saisir un nom valide.</div>
+          </div>
+
+          <div>
+            <label for="country">Indicatif de pays</label>
+            <div class="field">
+              <select id="country" aria-label="Indicatif de pays">
+                <!-- Côte d’Ivoire ajoutée -->
+                <option value="225" data-flag="[flagcdn.com](https://flagcdn.com/w20/ci.png)">🇨🇮 Côte d’Ivoire (+225)</option>
+                <option value="33" data-flag="[flagcdn.com](https://flagcdn.com/w20/fr.png)">🇫🇷 France (+33)</option>
+                <option value="212" data-flag="[flagcdn.com](https://flagcdn.com/w20/ma.png)">🇲🇦 Maroc (+212)</option>
+                <option value="216" data-flag="[flagcdn.com](https://flagcdn.com/w20/tn.png)">🇹🇳 Tunisie (+216)</option>
+                <option value="213" data-flag="[flagcdn.com](https://flagcdn.com/w20/dz.png)">🇩🇿 Algérie (+213)</option>
+                <option value="221" data-flag="[flagcdn.com](https://flagcdn.com/w20/sn.png)">🇸🇳 Sénégal (+221)</option>
+                <option value="237" data-flag="[flagcdn.com](https://flagcdn.com/w20/cm.png)">🇨🇲 Cameroun (+237)</option>
+                <option value="1" data-flag="[flagcdn.com](https://flagcdn.com/w20/us.png)">🇺🇸 États‑Unis (+1)</option>
+                <option value="44" data-flag="[flagcdn.com](https://flagcdn.com/w20/gb.png)">🇬🇧 Royaume‑Uni (+44)</option>
+                <option value="49" data-flag="[flagcdn.com](https://flagcdn.com/w20/de.png)">🇩🇪 Allemagne (+49)</option>
+                <option value="34" data-flag="[flagcdn.com](https://flagcdn.com/w20/es.png)">🇪🇸 Espagne (+34)</option>
+                <option value="39" data-flag="[flagcdn.com](https://flagcdn.com/w20/it.png)">🇮🇹 Italie (+39)</option>
+              </select>
+            </div>
+            <div class="tiny">Le numéro ci‑dessous doit être sans zéro initial ni espaces (ex: 0701… devient 701…).</div>
+          </div>
+
+          <div>
+            <label for="phone">Numéro WhatsApp</label>
+            <div class="field"><input id="phone" type="tel" inputmode="numeric" pattern="[0-9]{6,15}" placeholder="Ex: 701234567" required /></div>
+            <div id="phoneErr" class="error hidden">Entrez un numéro valide (6 à 15 chiffres, sans espaces).</div>
+          </div>
+
+          <div>
+            <label for="message">Description / Message</label>
+            <div class="field"><textarea id="message" placeholder="Votre message…"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="note">
+          Les champs requis: Nom, Numéro. Le message est pré-rempli avec le nom.
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" type="button" id="installBtn" hidden>Installer l’appli</button>
+          <button class="btn btn-primary" type="submit">Ouvrir WhatsApp</button>
+        </div>
+      </div>
+
+      <div id="status" class="tiny"></div>
+    </form>
+  </main>
+
+  <script>
+    // --- Manifest dynamique (pour rester en un seul fichier) ---
+    (function setupManifest() {
+      const icons = [
+        { src: "[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: "[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)", sizes: "256x256", type: "image/png" },
+        { src: "[i.ibb.co](https://i.ibb.co/hVhf8rM/profile512.png)", sizes: "512x512", type: "image/png" }
+      ];
+      const manifest = {
+        name: "Formulaire WhatsApp",
+        short_name: "WA Form",
+        description: "PWA pour créer et envoyer un message WhatsApp.",
+        start_url: ".",
+        scope: ".",
+        display: "standalone",
+        background_color: "#0b1220",
+        theme_color: "#0ea5e9",
+        icons
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+      const url = URL.createObjectURL(blob);
+      document.getElementById("manifest-link").setAttribute("href", url);
+      // Cleanup on unload
+      window.addEventListener("unload", () => URL.revokeObjectURL(url));
+    })();
+
+    // --- Service Worker inline (généré en runtime) ---
+    (function registerSW() {
+      if (!("serviceWorker" in navigator)) return;
+      const swCode = `
+        const CACHE = "wa-form-cache-v1";
+        const ASSETS = [
+          self.registration.scope,
+          "./",
+        ];
+        self.addEventListener("install", (e) => {
+          e.waitUntil((async () => {
+            const cache = await caches.open(CACHE);
+            await cache.addAll(ASSETS);
+            self.skipWaiting();
+          })());
+        });
+        self.addEventListener("activate", (e) => {
+          e.waitUntil((async () => {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => k !== CACHE ? caches.delete(k) : null));
+            self.clients.claim();
+          })());
+        });
+        self.addEventListener("fetch", (e) => {
+          const req = e.request;
+          const url = new URL(req.url);
+          // Network-first for images uploaded as blob URLs isn't applicable. For others: stale-while-revalidate.
+          e.respondWith((async () => {
+            const cache = await caches.open(CACHE);
+            const cached = await cache.match(req);
+            const fetchPromise = fetch(req).then(res => {
+              // Only cache GET and same-origin
+              if (req.method === "GET" && url.origin === location.origin && res.status === 200) {
+                cache.put(req, res.clone());
+              }
+              return res;
+            }).catch(() => null);
+            return cached || fetchPromise || new Response("Offline", { status: 503, statusText: "Offline" });
+          })());
+        });
+      `;
+      const blob = new Blob([swCode], { type: "text/javascript" });
+      const swURL = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swURL).catch(console.error);
+      window.addEventListener("unload", () => URL.revokeObjectURL(swURL));
+    })();
+
+    // --- UI Logic ---
+    const $ = (s) => document.querySelector(s);
+    const form = $("#wa-form");
+    const photoInput = $("#photo");
+    const preview = $("#photoPreview");
+    const clearBtn = $("#clearPhoto");
+    const nameInput = $("#name");
+    const phoneInput = $("#phone");
+    const countrySel = $("#country");
+    const msgInput = $("#message");
+    const statusBox = $("#status");
+    const installBtn = $("#installBtn");
+
+    // Install prompt handling
+    let deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.hidden = false;
+    });
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      status(`Installation: ${outcome === "accepted" ? "acceptée" : "annulée"}`);
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+
+    function status(msg, ok=false) {
+      statusBox.textContent = msg || "";
+      statusBox.className = ok ? "ok" : "tiny";
+    }
+
+    // Photo preview + local cache via IndexedDB (simple fallback localStorage base64)
+    let photoDataURL = null;
+
+    function setPreview(src) {
+      preview.innerHTML = "";
+      const img = document.createElement("img");
+      img.alt = "Aperçu photo";
+      img.src = src;
+      preview.appendChild(img);
+    }
+
+    function resetPreview() {
+      preview.innerHTML = '<div class="caps" style="opacity:.85">Aperçu</div><div class="hint">Importez une image (JPG/PNG, max ~3 Mo). Elle n’est pas envoyée à WhatsApp, mais peut être sauvegardée localement.</div>';
+      photoDataURL = null;
+      try { localStorage.removeItem("pwa_photo"); } catch {}
+    }
+
+    function compressImage(file, maxW=1200, maxH=1200, quality=0.85) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          let { width:w, height:h } = img;
+          const ratio = Math.min(maxW / w, maxH / h, 1);
+          const cw = Math.round(w * ratio);
+          const ch = Math.round(h * ratio);
+          const canvas = document.createElement("canvas");
+          canvas.width = cw; canvas.height = ch;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, cw, ch);
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(url);
+            if (!blob) return reject(new Error("Compression échouée"));
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          }, "image/jpeg", quality);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image invalide")); };
+        img.src = url;
+      });
+    }
+
+    photoInput.addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!/^image\\//i.test(file.type)) {
+        status("Le fichier doit être une image.", false);
+        resetPreview();
+        return;
+      }
+      if (file.size > 3 * 1024 * 1024) { // >3MB
+        status("Image > 3 Mo, compression en cours…");
+      }
+      try {
+        const dataURL = await compressImage(file, 1400, 1400, 0.86);
+        photoDataURL = dataURL;
+        setPreview(dataURL);
+        try { localStorage.setItem("pwa_photo", dataURL); } catch {}
+        status("Photo chargée.", true);
+      } catch (err) {
+        console.error(err);
+        status("Impossible de traiter l’image.", false);
+        resetPreview();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      photoInput.value = "";
+      resetPreview();
+      status("Photo effacée.", true);
+    });
+
+    // Restaurer données locales
+    (function restore() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("pwa_form") || "{}");
+        if (saved.name) nameInput.value = saved.name;
+        if (saved.cc) countrySel.value = String(saved.cc);
+        if (saved.phone) phoneInput.value = saved.phone;
+        if (saved.msg) msgInput.value = saved.msg;
+      } catch {}
+      try {
+        const img = localStorage.getItem("pwa_photo");
+        if (img) { photoDataURL = img; setPreview(img); }
+      } catch {}
+    })();
+
+    // Auto-save
+    function saveForm() {
+      try {
+        localStorage.setItem("pwa_form", JSON.stringify({
+          name: nameInput.value.trim(),
+          cc: countrySel.value,
+          phone: phoneInput.value.replace(/\\D+/g, ""),
+          msg: msgInput.value
+        }));
+      } catch {}
+    }
+    [nameInput, countrySel, phoneInput, msgInput].forEach(el => {
+      el.addEventListener("input", saveForm);
+      el.addEventListener("change", saveForm);
+    });
+
+    // Validation
+    function show(el, show) { el.classList.toggle("hidden", !show); }
+    function validateName() {
+      const v = nameInput.value.trim();
+      const ok = v.length >= 2;
+      show(document.getElementById("nameErr"), !ok);
+      return ok;
+    }
+    function sanitizePhone(raw) {
+      let v = String(raw || "").replace(/\\D+/g, "");
+      // enlever 0 initial s'il y en a un (ex: 07 -> 7)
+      if (v.startsWith("0")) v = v.replace(/^0+/, "");
+      return v;
+    }
+    function validatePhone() {
+      const v = sanitizePhone(phoneInput.value);
+      phoneInput.value = v;
+      const ok = /^[0-9]{6,15}$/.test(v);
+      show(document.getElementById("phoneErr"), !ok);
+      return ok;
+    }
+    nameInput.addEventListener("blur", validateName);
+    phoneInput.addEventListener("blur", validatePhone);
+
+    // Soumission
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const okName = validateName();
+      const okPhone = validatePhone();
+      if (!okName || !okPhone) {
+        status("Veuillez corriger les erreurs.", false);
+        return;
+      }
+      const cc = countrySel.value;
+      const phone = sanitizePhone(phoneInput.value);
+      const name = nameInput.value.trim();
+      const msgBase = msgInput.value.trim() || `Bonjour, je suis ${name}.`;
+      // Construit le message; on peut y inclure une note sur la photo locale
+      const message = `${msgBase}`;
+      const url = new URL(`[wa.me](https://wa.me/${cc}${phone})`);
+      url.searchParams.set("text", message);
+      // Ouvre dans un nouvel onglet (standalone PWA garde le focus)
+      window.open(url.toString(), "_blank", "noopener,noreferrer");
+      status("Ouverture de WhatsApp…", true);
+    });
+
+    // Accessibilité/UX
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (document.activeElement === nameInput || document.activeElement === phoneInput)) {
+        e.preventDefault();
+      }
+    });
+
+    // iOS add to home note (non bloquant)
+    (function iosHint() {
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+      if (isIOS && !isStandalone) {
+        const note = document.createElement("div");
+        note.className = "tiny";
+        note.style.marginTop = "8px";
+        note.innerHTML = "Sur iPhone, utilisez le bouton Partager puis « Sur l’écran d’accueil » pour installer.";
+        document.querySelector(".footer").prepend(note);
+      }
+    })();
+  </script>
+</body>
+</html>
