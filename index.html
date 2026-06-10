@@ -1,532 +1,679 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PWA Formulaire WhatsApp</title>
-  <meta name="theme-color" content="#0ea5e9" />
-  <meta name="description" content="PWA: Envoi rapide vers WhatsApp avec photo, nom, numéro et message." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ADD.HD</title>
+  <meta name="description" content="ADD.HD - Générateur de lien WhatsApp avec photo, nom, numéro et message." />
+  <meta name="theme-color" content="#128C7E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ADD.HD" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
-  <!-- Manifest (data URL pour rester en un seul fichier) -->
-  <link rel="manifest" id="manifest-link" />
+  <link rel="icon" type="image/png" href="[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)" />
+  <link rel="apple-touch-icon" href="[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)" />
 
-  <!-- Icône applis/Apple -->
-  <link rel="apple-touch-icon" href="[i.ibb.co](https://i.ibb.co/hVhf8rM/profile512.png)" />
   <style>
-    :root {
-      --bg: #0b1220;
-      --panel: #0f172a;
-      --soft: #111827;
-      --accent: #0ea5e9;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
-      --danger: #ef4444;
-      --ok: #22c55e;
-      --focus: 0 0 0 3px rgba(14,165,233,.35);
-      --radius: 14px;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: linear-gradient(160deg, #0b1220 0%, #0a122a 50%, #0b1220 100%);
-      color: var(--text);
-      display: grid;
-      place-items: start center;
-      padding: 24px 16px 80px;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 6px 0 18px;
-      width: 100%;
-      max-width: 760px;
-    }
-    header img.logo {
-      width: 48px; height: 48px; border-radius: 12px; object-fit: cover;
-      box-shadow: 0 6px 18px rgba(14,165,233,.25);
-    }
-    header h1 {
-      font-size: 20px; margin: 0; line-height: 1.15; font-weight: 700;
-      letter-spacing: .2px;
-    }
-    header p {
-      margin: 0; color: var(--muted); font-size: 13px;
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --soft:#1f2937;
+      --line:#334155;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --accent:#25D366;
+      --accent-dark:#128C7E;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+      --radius:20px;
     }
 
-    .card {
-      width: 100%;
-      max-width: 760px;
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border: 1px solid rgba(148,163,184,.12);
-      border-radius: var(--radius);
-      box-shadow: 0 20px 60px rgba(2,6,23,.55), inset 0 1px 0 rgba(255,255,255,.04);
-      padding: 20px;
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:linear-gradient(180deg,#0b1220 0%, #0f172a 100%);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      min-height:100%;
     }
 
-    form {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 720px) {
-      .grid-2 { grid-template-columns: 1.2fr 2fr; }
+    body{
+      padding:18px;
     }
 
-    label { font-size: 13px; color: var(--muted); margin-bottom: 6px; display: inline-block; }
-    .field {
-      background: var(--panel);
-      border: 1px solid rgba(148,163,184,.16);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: border .2s ease, background .2s ease, transform .05s ease;
+    .app{
+      max-width:760px;
+      margin:0 auto;
     }
-    .field:focus-within {
-      border-color: rgba(14,165,233,.6);
-      box-shadow: var(--focus);
-    }
-    input[type="text"],
-    input[type="tel"],
-    textarea,
-    select {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.4;
-      resize: vertical;
-    }
-    textarea { min-height: 96px; }
 
-    .preview {
-      display: grid; place-items: center; aspect-ratio: 1/1;
-      background: linear-gradient(180deg, #0a1226, #0e1630);
-      border: 1px dashed rgba(148,163,184,.28);
-      border-radius: 16px;
-      position: relative; overflow: hidden;
+    .card{
+      background:rgba(17,24,39,.92);
+      border:1px solid rgba(148,163,184,.15);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter:blur(8px);
     }
-    .preview img {
-      width: 100%; height: 100%; object-fit: cover;
+
+    .hero{
+      padding:22px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+      border-bottom:1px solid rgba(148,163,184,.12);
+      background:linear-gradient(135deg, rgba(37,211,102,.15), rgba(18,140,126,.10));
     }
-    .preview .hint {
-      position: absolute; bottom: 10px; left: 10px; right: 10px;
-      color: var(--muted); font-size: 12px; background: rgba(2,6,23,.6);
-      padding: 6px 8px; border-radius: 8px; backdrop-filter: blur(6px);
+
+    .logo{
+      width:74px;
+      height:74px;
+      border-radius:18px;
+      object-fit:cover;
+      border:2px solid rgba(255,255,255,.16);
+      background:#fff;
+      flex-shrink:0;
     }
-    .uploader {
-      display: grid; gap: 10px;
+
+    .hero h1{
+      margin:0 0 6px 0;
+      font-size:28px;
+      line-height:1.1;
     }
-    .row {
-      display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: center;
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
     }
-    @media (max-width: 480px) {
-      .row { grid-template-columns: 1fr; }
+
+    .content{
+      padding:20px;
     }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 10px; border: none; cursor: pointer;
-      font-weight: 700; letter-spacing: .2px;
-      border-radius: 12px; padding: 12px 14px; font-size: 15px;
-      transition: transform .05s ease, background .2s ease, box-shadow .2s ease;
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
     }
-    .btn:active { transform: translateY(1px); }
-    .btn-primary {
-      background: linear-gradient(180deg, #10b981, #0ea5e9);
-      color: #0b1220;
-      box-shadow: 0 10px 30px rgba(14,165,233,.35), inset 0 1px 0 rgba(255,255,255,.5);
+
+    .full{
+      grid-column:1 / -1;
     }
-    .btn-secondary {
-      background: #132036; color: #dbeafe; border: 1px solid rgba(148,163,184,.18);
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
-    .note { color: var(--muted); font-size: 12px; }
-    .error { color: var(--danger); font-size: 13px; margin-top: 6px; }
-    .ok { color: var(--ok); font-size: 13px; margin-top: 6px; }
-    .footer {
-      display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
-      align-items: center; margin-top: 8px;
+
+    label{
+      font-size:14px;
+      font-weight:700;
     }
-    .flag {
-      width: 18px; height: 12px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(148,163,184,.25) inset;
-      object-fit: cover;
+
+    input, select, textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background:#0b1220;
+      color:var(--text);
+      border-radius:14px;
+      padding:14px 14px;
+      outline:none;
+      font-size:15px;
+      transition:border-color .2s ease, transform .06s ease;
     }
-    .caps { text-transform: uppercase; font-weight: 700; color: #93c5fd; font-size: 12px; letter-spacing: .5px; }
-    .tiny { font-size: 11px; color: var(--muted); }
-    .spacer { height: 6px; }
-    .hidden { display: none !important; }
+
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--accent);
+    }
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    .phone-wrap{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:12px;
+    }
+
+    .preview{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:14px;
+      border:1px dashed rgba(148,163,184,.25);
+      border-radius:16px;
+      background:rgba(15,23,42,.55);
+    }
+
+    .preview img{
+      width:72px;
+      height:72px;
+      border-radius:16px;
+      object-fit:cover;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .preview .meta{
+      min-width:0;
+    }
+
+    .preview .meta .name{
+      font-weight:700;
+      margin-bottom:6px;
+      word-break:break-word;
+    }
+
+    .preview .meta .sub{
+      color:var(--muted);
+      font-size:13px;
+      word-break:break-word;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    button{
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .06s ease, opacity .2s ease, background .2s ease;
+    }
+
+    button:active{
+      transform:translateY(1px);
+    }
+
+    .btn-primary{
+      background:var(--accent);
+      color:#062b15;
+    }
+
+    .btn-secondary{
+      background:#1d4ed8;
+      color:#fff;
+    }
+
+    .btn-dark{
+      background:#0b1220;
+      color:#fff;
+      border:1px solid var(--line);
+    }
+
+    .btn-warning{
+      background:var(--warning);
+      color:#111827;
+    }
+
+    .output{
+      margin-top:18px;
+      padding:16px;
+      border-radius:16px;
+      background:#0b1220;
+      border:1px solid rgba(148,163,184,.16);
+    }
+
+    .output label{
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .output-box{
+      display:flex;
+      gap:10px;
+      align-items:stretch;
+      flex-wrap:wrap;
+    }
+
+    .output-box input{
+      flex:1 1 420px;
+      background:#020617;
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .status{
+      margin-top:12px;
+      font-size:14px;
+      font-weight:700;
+      min-height:20px;
+    }
+
+    .status.ok{color:#4ade80}
+    .status.err{color:#f87171}
+
+    .install-box{
+      margin-top:18px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.15);
+      background:linear-gradient(135deg, rgba(37,211,102,.08), rgba(29,78,216,.08));
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .install-box .text{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .footer{
+      margin-top:16px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    @media (max-width:640px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+      .phone-wrap{
+        grid-template-columns:1fr;
+      }
+      .hero{
+        align-items:flex-start;
+      }
+      .hero h1{
+        font-size:24px;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <img class="logo" alt="Logo PWA" src="[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)" />
-    <div>
-      <h1>Envoi WhatsApp — Formulaire PWA</h1>
-      <p>Ajoutez sur l’écran d’accueil pour un accès instantané, même hors ligne.</p>
-    </div>
-  </header>
-
-  <main class="card" aria-labelledby="form-title">
-    <form id="wa-form" novalidate>
-      <div class="grid-2">
-        <!-- Bloc Image -->
-        <div class="uploader">
-          <label for="photo">Photo</label>
-          <div class="preview" id="photoPreview" aria-live="polite">
-            <div class="caps" style="opacity:.85">Aperçu</div>
-            <div class="hint">Importez une image (JPG/PNG, max ~3 Mo). Elle n’est pas envoyée à WhatsApp, mais peut être sauvegardée localement.</div>
-          </div>
-          <div class="row">
-            <input type="file" id="photo" accept="image/*" />
-            <button class="btn btn-secondary" type="button" id="clearPhoto">Effacer</button>
-          </div>
-          <div class="tiny">Astuce: l’image est stockée localement (cache PWA) pour réutilisation rapide.</div>
-          <div class="spacer"></div>
-        </div>
-
-        <!-- Bloc Champs -->
+  <div class="app">
+    <div class="card">
+      <div class="hero">
+        <img
+          class="logo"
+          src="[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)"
+          alt="Logo ADD.HD"
+          id="appLogo"
+        />
         <div>
-          <div>
-            <label for="name">Nom</label>
-            <div class="field"><input id="name" type="text" placeholder="Ex: Aïcha Koné" autocomplete="name" required /></div>
-            <div id="nameErr" class="error hidden">Veuillez saisir un nom valide.</div>
-          </div>
+          <h1>ADD.HD</h1>
+          <p>Crée un lien WhatsApp partageable à partir d'une photo, d'un nom, d'un numéro et d'un message.</p>
+        </div>
+      </div>
 
-          <div>
-            <label for="country">Indicatif de pays</label>
+      <div class="content">
+        <form id="waForm" autocomplete="on">
+          <div class="grid">
+            <div class="field full">
+              <label for="photo">Photo</label>
+              <input type="file" id="photo" accept="image/*" />
+            </div>
+
             <div class="field">
-              <select id="country" aria-label="Indicatif de pays">
-                <!-- Côte d’Ivoire ajoutée -->
-                <option value="225" data-flag="[flagcdn.com](https://flagcdn.com/w20/ci.png)">🇨🇮 Côte d’Ivoire (+225)</option>
-                <option value="33" data-flag="[flagcdn.com](https://flagcdn.com/w20/fr.png)">🇫🇷 France (+33)</option>
-                <option value="212" data-flag="[flagcdn.com](https://flagcdn.com/w20/ma.png)">🇲🇦 Maroc (+212)</option>
-                <option value="216" data-flag="[flagcdn.com](https://flagcdn.com/w20/tn.png)">🇹🇳 Tunisie (+216)</option>
-                <option value="213" data-flag="[flagcdn.com](https://flagcdn.com/w20/dz.png)">🇩🇿 Algérie (+213)</option>
-                <option value="221" data-flag="[flagcdn.com](https://flagcdn.com/w20/sn.png)">🇸🇳 Sénégal (+221)</option>
-                <option value="237" data-flag="[flagcdn.com](https://flagcdn.com/w20/cm.png)">🇨🇲 Cameroun (+237)</option>
-                <option value="1" data-flag="[flagcdn.com](https://flagcdn.com/w20/us.png)">🇺🇸 États‑Unis (+1)</option>
-                <option value="44" data-flag="[flagcdn.com](https://flagcdn.com/w20/gb.png)">🇬🇧 Royaume‑Uni (+44)</option>
-                <option value="49" data-flag="[flagcdn.com](https://flagcdn.com/w20/de.png)">🇩🇪 Allemagne (+49)</option>
-                <option value="34" data-flag="[flagcdn.com](https://flagcdn.com/w20/es.png)">🇪🇸 Espagne (+34)</option>
-                <option value="39" data-flag="[flagcdn.com](https://flagcdn.com/w20/it.png)">🇮🇹 Italie (+39)</option>
+              <label for="name">Nom</label>
+              <input type="text" id="name" placeholder="Ex: Koffi Serge" maxlength="80" required />
+            </div>
+
+            <div class="field">
+              <label for="country">Indicatif pays</label>
+              <select id="country" required>
+                <option value="+225" selected>🇨🇮 Côte d'Ivoire (+225)</option>
+                <option value="+213">🇩🇿 Algérie (+213)</option>
+                <option value="+49">🇩🇪 Allemagne (+49)</option>
+                <option value="+244">🇦🇴 Angola (+244)</option>
+                <option value="+966">🇸🇦 Arabie saoudite (+966)</option>
+                <option value="+32">🇧🇪 Belgique (+32)</option>
+                <option value="+229">🇧🇯 Bénin (+229)</option>
+                <option value="+267">🇧🇼 Botswana (+267)</option>
+                <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+                <option value="+257">🇧🇮 Burundi (+257)</option>
+                <option value="+237">🇨🇲 Cameroun (+237)</option>
+                <option value="+1">🇨🇦 Canada (+1)</option>
+                <option value="+242">🇨🇬 Congo (+242)</option>
+                <option value="+243">🇨🇩 RD Congo (+243)</option>
+                <option value="+45">🇩🇰 Danemark (+45)</option>
+                <option value="+34">🇪🇸 Espagne (+34)</option>
+                <option value="+1">🇺🇸 États-Unis (+1)</option>
+                <option value="+33">🇫🇷 France (+33)</option>
+                <option value="+241">🇬🇦 Gabon (+241)</option>
+                <option value="+220">🇬🇲 Gambie (+220)</option>
+                <option value="+233">🇬🇭 Ghana (+233)</option>
+                <option value="+224">🇬🇳 Guinée (+224)</option>
+                <option value="+245">🇬🇼 Guinée-Bissau (+245)</option>
+                <option value="+39">🇮🇹 Italie (+39)</option>
+                <option value="+254">🇰🇪 Kenya (+254)</option>
+                <option value="+352">🇱🇺 Luxembourg (+352)</option>
+                <option value="+223">🇲🇱 Mali (+223)</option>
+                <option value="+212">🇲🇦 Maroc (+212)</option>
+                <option value="+227">🇳🇪 Niger (+227)</option>
+                <option value="+234">🇳🇬 Nigeria (+234)</option>
+                <option value="+31">🇳🇱 Pays-Bas (+31)</option>
+                <option value="+351">🇵🇹 Portugal (+351)</option>
+                <option value="+250">🇷🇼 Rwanda (+250)</option>
+                <option value="+221">🇸🇳 Sénégal (+221)</option>
+                <option value="+232">🇸🇱 Sierra Leone (+232)</option>
+                <option value="+41">🇨🇭 Suisse (+41)</option>
+                <option value="+228">🇹🇬 Togo (+228)</option>
+                <option value="+216">🇹🇳 Tunisie (+216)</option>
               </select>
             </div>
-            <div class="tiny">Le numéro ci‑dessous doit être sans zéro initial ni espaces (ex: 0701… devient 701…).</div>
+
+            <div class="field full">
+              <label for="number">Numéro WhatsApp</label>
+              <div class="phone-wrap">
+                <input type="text" id="countryCodeMirror" value="+225" readonly />
+                <input type="tel" id="number" placeholder="Ex: 0700000000" inputmode="numeric" required />
+              </div>
+              <div class="small">Entre le numéro sans espaces inutiles. Le lien sera généré automatiquement au format wa.me.</div>
+            </div>
+
+            <div class="field full">
+              <label for="message">Description / Message</label>
+              <textarea id="message" placeholder="Écris le message qui sera envoyé sur WhatsApp..." maxlength="1000" required></textarea>
+            </div>
+
+            <div class="field full">
+              <label>Aperçu</label>
+              <div class="preview">
+                <img id="photoPreview" alt="Aperçu de la photo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjAnIGhlaWdodD0nMTIwJyB2aWV3Qm94PScwIDAgMTIwIDEyMCc+PHJlY3Qgd2lkdGg9JzEyMCcgaGVpZ2h0PScxMjAnIGZpbGw9JyMxMTE4MjcnLz48Y2lyY2xlIGN4PSc2MCcgY3k9JzQ1JyByPScxOCcgZmlsbD0nIzMzNDE1NScvPjxyZWN0IHg9JzI0JyB5PSc3NCcgd2lkdGg9JzcyJyBoZWlnaHQ9JzE4JyByeD0nOScgZmlsbD0nIzMzNDE1NScvPjwvc3ZnPg==" />
+                <div class="meta">
+                  <div class="name" id="previewName">Nom non renseigné</div>
+                  <div class="sub" id="previewPhone">+225</div>
+                  <div class="sub" id="previewMessage">Le message apparaîtra ici.</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label for="phone">Numéro WhatsApp</label>
-            <div class="field"><input id="phone" type="tel" inputmode="numeric" pattern="[0-9]{6,15}" placeholder="Ex: 701234567" required /></div>
-            <div id="phoneErr" class="error hidden">Entrez un numéro valide (6 à 15 chiffres, sans espaces).</div>
+          <div class="actions">
+            <button type="submit" class="btn-primary">Créer le lien WhatsApp</button>
+            <button type="button" class="btn-secondary" id="shareBtn">Partager</button>
+            <button type="button" class="btn-dark" id="copyBtn">Copier le lien</button>
+            <button type="button" class="btn-warning" id="openBtn">Ouvrir dans WhatsApp</button>
           </div>
+        </form>
 
-          <div>
-            <label for="message">Description / Message</label>
-            <div class="field"><textarea id="message" placeholder="Votre message…"></textarea></div>
+        <div class="output">
+          <label for="resultLink">Lien généré</label>
+          <div class="output-box">
+            <input type="text" id="resultLink" readonly placeholder="Le lien wa.me apparaîtra ici..." />
           </div>
+          <div class="hint">
+            Le message généré inclut le nom et la description. La photo reste affichée dans l'application comme aperçu visuel, mais elle ne peut pas être injectée directement dans un lien wa.me, car WhatsApp n'accepte pas l'envoi automatique d'image via ce type de lien.
+          </div>
+          <div class="status" id="status"></div>
+        </div>
+
+        <div class="install-box">
+          <div class="text">
+            Installe <strong>ADD.HD</strong> sur l'écran d'accueil pour l'utiliser comme une application.
+            Sur certains navigateurs, utilise le menu <strong>Ajouter à l'écran d'accueil</strong> si le bouton d'installation ne s'affiche pas.
+          </div>
+          <button type="button" class="btn-dark" id="installBtn" hidden>Installer ADD.HD</button>
+        </div>
+
+        <div class="footer">
+          ADD.HD - Générateur de lien WhatsApp
         </div>
       </div>
-
-      <div class="footer">
-        <div class="note">
-          Les champs requis: Nom, Numéro. Le message est pré-rempli avec le nom.
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-secondary" type="button" id="installBtn" hidden>Installer l’appli</button>
-          <button class="btn btn-primary" type="submit">Ouvrir WhatsApp</button>
-        </div>
-      </div>
-
-      <div id="status" class="tiny"></div>
-    </form>
-  </main>
+    </div>
+  </div>
 
   <script>
-    // --- Manifest dynamique (pour rester en un seul fichier) ---
-    (function setupManifest() {
-      const icons = [
-        { src: "[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)", sizes: "192x192", type: "image/png", purpose: "any maskable" },
-        { src: "[i.ibb.co](https://i.ibb.co/HpVYdC9y/profile.png)", sizes: "256x256", type: "image/png" },
-        { src: "[i.ibb.co](https://i.ibb.co/hVhf8rM/profile512.png)", sizes: "512x512", type: "image/png" }
-      ];
-      const manifest = {
-        name: "Formulaire WhatsApp",
-        short_name: "WA Form",
-        description: "PWA pour créer et envoyer un message WhatsApp.",
-        start_url: ".",
-        scope: ".",
-        display: "standalone",
-        background_color: "#0b1220",
-        theme_color: "#0ea5e9",
-        icons
-      };
-      const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
-      const url = URL.createObjectURL(blob);
-      document.getElementById("manifest-link").setAttribute("href", url);
-      // Cleanup on unload
-      window.addEventListener("unload", () => URL.revokeObjectURL(url));
-    })();
+    (() => {
+      const LOGO_URL = "[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)";
 
-    // --- Service Worker inline (généré en runtime) ---
-    (function registerSW() {
-      if (!("serviceWorker" in navigator)) return;
-      const swCode = `
-        const CACHE = "wa-form-cache-v1";
-        const ASSETS = [
-          self.registration.scope,
-          "./",
-        ];
-        self.addEventListener("install", (e) => {
-          e.waitUntil((async () => {
-            const cache = await caches.open(CACHE);
-            await cache.addAll(ASSETS);
-            self.skipWaiting();
-          })());
-        });
-        self.addEventListener("activate", (e) => {
-          e.waitUntil((async () => {
-            const keys = await caches.keys();
-            await Promise.all(keys.map(k => k !== CACHE ? caches.delete(k) : null));
-            self.clients.claim();
-          })());
-        });
-        self.addEventListener("fetch", (e) => {
-          const req = e.request;
-          const url = new URL(req.url);
-          // Network-first for images uploaded as blob URLs isn't applicable. For others: stale-while-revalidate.
-          e.respondWith((async () => {
-            const cache = await caches.open(CACHE);
-            const cached = await cache.match(req);
-            const fetchPromise = fetch(req).then(res => {
-              // Only cache GET and same-origin
-              if (req.method === "GET" && url.origin === location.origin && res.status === 200) {
-                cache.put(req, res.clone());
-              }
-              return res;
-            }).catch(() => null);
-            return cached || fetchPromise || new Response("Offline", { status: 503, statusText: "Offline" });
-          })());
-        });
-      `;
-      const blob = new Blob([swCode], { type: "text/javascript" });
-      const swURL = URL.createObjectURL(blob);
-      navigator.serviceWorker.register(swURL).catch(console.error);
-      window.addEventListener("unload", () => URL.revokeObjectURL(swURL));
-    })();
+      const form = document.getElementById("waForm");
+      const photoInput = document.getElementById("photo");
+      const nameInput = document.getElementById("name");
+      const countrySelect = document.getElementById("country");
+      const countryCodeMirror = document.getElementById("countryCodeMirror");
+      const numberInput = document.getElementById("number");
+      const messageInput = document.getElementById("message");
+      const resultLink = document.getElementById("resultLink");
+      const statusBox = document.getElementById("status");
+      const photoPreview = document.getElementById("photoPreview");
+      const previewName = document.getElementById("previewName");
+      const previewPhone = document.getElementById("previewPhone");
+      const previewMessage = document.getElementById("previewMessage");
+      const copyBtn = document.getElementById("copyBtn");
+      const shareBtn = document.getElementById("shareBtn");
+      const openBtn = document.getElementById("openBtn");
+      const installBtn = document.getElementById("installBtn");
 
-    // --- UI Logic ---
-    const $ = (s) => document.querySelector(s);
-    const form = $("#wa-form");
-    const photoInput = $("#photo");
-    const preview = $("#photoPreview");
-    const clearBtn = $("#clearPhoto");
-    const nameInput = $("#name");
-    const phoneInput = $("#phone");
-    const countrySel = $("#country");
-    const msgInput = $("#message");
-    const statusBox = $("#status");
-    const installBtn = $("#installBtn");
+      let deferredPrompt = null;
+      let uploadedPhotoData = "";
 
-    // Install prompt handling
-    let deferredPrompt = null;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.hidden = false;
-    });
-    installBtn.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      status(`Installation: ${outcome === "accepted" ? "acceptée" : "annulée"}`);
-      deferredPrompt = null;
-      installBtn.hidden = true;
-    });
+      function setStatus(message, type = "") {
+        statusBox.textContent = message;
+        statusBox.className = "status" + (type ? " " + type : "");
+      }
 
-    function status(msg, ok=false) {
-      statusBox.textContent = msg || "";
-      statusBox.className = ok ? "ok" : "tiny";
-    }
+      function sanitizeNumber(input) {
+        return (input || "").replace(/[^\d]/g, "");
+      }
 
-    // Photo preview + local cache via IndexedDB (simple fallback localStorage base64)
-    let photoDataURL = null;
+      function buildWhatsAppLink() {
+        const name = nameInput.value.trim();
+        const countryCode = countrySelect.value.trim();
+        const localNumber = sanitizeNumber(numberInput.value);
+        const message = messageInput.value.trim();
 
-    function setPreview(src) {
-      preview.innerHTML = "";
-      const img = document.createElement("img");
-      img.alt = "Aperçu photo";
-      img.src = src;
-      preview.appendChild(img);
-    }
+        if (!name) {
+          setStatus("Veuillez renseigner le nom.", "err");
+          return "";
+        }
 
-    function resetPreview() {
-      preview.innerHTML = '<div class="caps" style="opacity:.85">Aperçu</div><div class="hint">Importez une image (JPG/PNG, max ~3 Mo). Elle n’est pas envoyée à WhatsApp, mais peut être sauvegardée localement.</div>';
-      photoDataURL = null;
-      try { localStorage.removeItem("pwa_photo"); } catch {}
-    }
+        if (!countryCode) {
+          setStatus("Veuillez choisir un indicatif pays.", "err");
+          return "";
+        }
 
-    function compressImage(file, maxW=1200, maxH=1200, quality=0.85) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        const url = URL.createObjectURL(file);
-        img.onload = () => {
-          let { width:w, height:h } = img;
-          const ratio = Math.min(maxW / w, maxH / h, 1);
-          const cw = Math.round(w * ratio);
-          const ch = Math.round(h * ratio);
-          const canvas = document.createElement("canvas");
-          canvas.width = cw; canvas.height = ch;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, cw, ch);
-          canvas.toBlob((blob) => {
-            URL.revokeObjectURL(url);
-            if (!blob) return reject(new Error("Compression échouée"));
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-          }, "image/jpeg", quality);
+        if (!localNumber) {
+          setStatus("Veuillez renseigner un numéro valide.", "err");
+          return "";
+        }
+
+        if (!message) {
+          setStatus("Veuillez saisir une description ou un message.", "err");
+          return "";
+        }
+
+        const fullNumber = (countryCode + localNumber).replace(/[^\d]/g, "");
+        const finalMessage = `Bonjour ${name},%0A%0A${encodeURIComponent(message).replace(/%250A/g, "%0A")}`;
+        const link = `[wa.me](https://wa.me/${fullNumber}?text=${finalMessage})`;
+
+        setStatus("Lien généré avec succès.", "ok");
+        return link;
+      }
+
+      function updatePreview() {
+        const name = nameInput.value.trim() || "Nom non renseigné";
+        const countryCode = countrySelect.value.trim() || "";
+        const localNumber = sanitizeNumber(numberInput.value);
+        const message = messageInput.value.trim() || "Le message apparaîtra ici.";
+
+        countryCodeMirror.value = countryCode;
+        previewName.textContent = name;
+        previewPhone.textContent = localNumber ? `${countryCode} ${localNumber}` : `${countryCode}`;
+        previewMessage.textContent = message;
+      }
+
+      function generateLink() {
+        const link = buildWhatsAppLink();
+        resultLink.value = link;
+        return link;
+      }
+
+      photoInput.addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+          setStatus("Le fichier choisi n'est pas une image valide.", "err");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          uploadedPhotoData = reader.result;
+          photoPreview.src = uploadedPhotoData;
+          setStatus("Photo ajoutée avec succès.", "ok");
         };
-        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image invalide")); };
-        img.src = url;
+        reader.onerror = () => {
+          setStatus("Impossible de lire la photo.", "err");
+        };
+        reader.readAsDataURL(file);
       });
-    }
 
-    photoInput.addEventListener("change", async (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      if (!/^image\\//i.test(file.type)) {
-        status("Le fichier doit être une image.", false);
-        resetPreview();
-        return;
-      }
-      if (file.size > 3 * 1024 * 1024) { // >3MB
-        status("Image > 3 Mo, compression en cours…");
-      }
-      try {
-        const dataURL = await compressImage(file, 1400, 1400, 0.86);
-        photoDataURL = dataURL;
-        setPreview(dataURL);
-        try { localStorage.setItem("pwa_photo", dataURL); } catch {}
-        status("Photo chargée.", true);
-      } catch (err) {
-        console.error(err);
-        status("Impossible de traiter l’image.", false);
-        resetPreview();
-      }
-    });
+      [nameInput, numberInput, messageInput].forEach((el) => {
+        el.addEventListener("input", () => {
+          updatePreview();
+          if (resultLink.value) generateLink();
+        });
+      });
 
-    clearBtn.addEventListener("click", () => {
-      photoInput.value = "";
-      resetPreview();
-      status("Photo effacée.", true);
-    });
+      countrySelect.addEventListener("change", () => {
+        updatePreview();
+        if (resultLink.value) generateLink();
+      });
 
-    // Restaurer données locales
-    (function restore() {
-      try {
-        const saved = JSON.parse(localStorage.getItem("pwa_form") || "{}");
-        if (saved.name) nameInput.value = saved.name;
-        if (saved.cc) countrySel.value = String(saved.cc);
-        if (saved.phone) phoneInput.value = saved.phone;
-        if (saved.msg) msgInput.value = saved.msg;
-      } catch {}
-      try {
-        const img = localStorage.getItem("pwa_photo");
-        if (img) { photoDataURL = img; setPreview(img); }
-      } catch {}
-    })();
-
-    // Auto-save
-    function saveForm() {
-      try {
-        localStorage.setItem("pwa_form", JSON.stringify({
-          name: nameInput.value.trim(),
-          cc: countrySel.value,
-          phone: phoneInput.value.replace(/\\D+/g, ""),
-          msg: msgInput.value
-        }));
-      } catch {}
-    }
-    [nameInput, countrySel, phoneInput, msgInput].forEach(el => {
-      el.addEventListener("input", saveForm);
-      el.addEventListener("change", saveForm);
-    });
-
-    // Validation
-    function show(el, show) { el.classList.toggle("hidden", !show); }
-    function validateName() {
-      const v = nameInput.value.trim();
-      const ok = v.length >= 2;
-      show(document.getElementById("nameErr"), !ok);
-      return ok;
-    }
-    function sanitizePhone(raw) {
-      let v = String(raw || "").replace(/\\D+/g, "");
-      // enlever 0 initial s'il y en a un (ex: 07 -> 7)
-      if (v.startsWith("0")) v = v.replace(/^0+/, "");
-      return v;
-    }
-    function validatePhone() {
-      const v = sanitizePhone(phoneInput.value);
-      phoneInput.value = v;
-      const ok = /^[0-9]{6,15}$/.test(v);
-      show(document.getElementById("phoneErr"), !ok);
-      return ok;
-    }
-    nameInput.addEventListener("blur", validateName);
-    phoneInput.addEventListener("blur", validatePhone);
-
-    // Soumission
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const okName = validateName();
-      const okPhone = validatePhone();
-      if (!okName || !okPhone) {
-        status("Veuillez corriger les erreurs.", false);
-        return;
-      }
-      const cc = countrySel.value;
-      const phone = sanitizePhone(phoneInput.value);
-      const name = nameInput.value.trim();
-      const msgBase = msgInput.value.trim() || `Bonjour, je suis ${name}.`;
-      // Construit le message; on peut y inclure une note sur la photo locale
-      const message = `${msgBase}`;
-      const url = new URL(`[wa.me](https://wa.me/${cc}${phone})`);
-      url.searchParams.set("text", message);
-      // Ouvre dans un nouvel onglet (standalone PWA garde le focus)
-      window.open(url.toString(), "_blank", "noopener,noreferrer");
-      status("Ouverture de WhatsApp…", true);
-    });
-
-    // Accessibilité/UX
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && (document.activeElement === nameInput || document.activeElement === phoneInput)) {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
-      }
-    });
+        generateLink();
+      });
 
-    // iOS add to home note (non bloquant)
-    (function iosHint() {
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-      if (isIOS && !isStandalone) {
-        const note = document.createElement("div");
-        note.className = "tiny";
-        note.style.marginTop = "8px";
-        note.innerHTML = "Sur iPhone, utilisez le bouton Partager puis « Sur l’écran d’accueil » pour installer.";
-        document.querySelector(".footer").prepend(note);
-      }
+      copyBtn.addEventListener("click", async () => {
+        const link = resultLink.value || generateLink();
+        if (!link) return;
+
+        try {
+          await navigator.clipboard.writeText(link);
+          setStatus("Lien copié dans le presse-papiers.", "ok");
+        } catch (error) {
+          resultLink.select();
+          document.execCommand("copy");
+          setStatus("Lien copié.", "ok");
+        }
+      });
+
+      shareBtn.addEventListener("click", async () => {
+        const link = resultLink.value || generateLink();
+        if (!link) return;
+
+        const shareData = {
+          title: "ADD.HD",
+          text: `Contact: ${nameInput.value.trim()}`
+            + `\nNuméro: ${countrySelect.value}${sanitizeNumber(numberInput.value)}`
+            + `\nMessage: ${messageInput.value.trim()}`,
+          url: link
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+            setStatus("Partage effectué.", "ok");
+          } catch (error) {
+            if (error && error.name !== "AbortError") {
+              setStatus("Le partage a échoué.", "err");
+            }
+          }
+        } else {
+          try {
+            await navigator.clipboard.writeText(link);
+            setStatus("Partage natif indisponible. Le lien a été copié.", "ok");
+          } catch (error) {
+            setStatus("Le partage natif n'est pas disponible sur cet appareil.", "err");
+          }
+        }
+      });
+
+      openBtn.addEventListener("click", () => {
+        const link = resultLink.value || generateLink();
+        if (!link) return;
+        window.open(link, "_blank", "noopener,noreferrer");
+      });
+
+      updatePreview();
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.hidden = false;
+      });
+
+      installBtn.addEventListener("click", async () => {
+        if (!deferredPrompt) {
+          setStatus("Utilise le menu du navigateur pour ajouter l'application à l'écran d'accueil.", "err");
+          return;
+        }
+
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          setStatus("ADD.HD a été ajoutée ou est en cours d'installation.", "ok");
+        } else {
+          setStatus("Installation annulée.", "err");
+        }
+        deferredPrompt = null;
+        installBtn.hidden = true;
+      });
+
+      const manifest = {
+        name: "ADD.HD",
+        short_name: "ADD.HD",
+        start_url: "./",
+        display: "standalone",
+        background_color: "#0f172a",
+        theme_color: "#128C7E",
+        description: "ADD.HD - Générateur de lien WhatsApp avec photo, nom, numéro et message.",
+        icons: [
+          {
+            src: LOGO_URL,
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any"
+          },
+          {
+            src: LOGO_URL,
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any"
+          }
+        ]
+      };
+
+      const manifestBlob = new Blob(
+        [JSON.stringify(manifest)],
+        { type: "application/manifest+json" }
+      );
+      const manifestURL = URL.createObjectURL(manifestBlob);
+      const manifestLink = document.createElement("link");
+      manifestLink.rel = "manifest";
+      manifestLink.href = manifestURL;
+      document.head.appendChild(manifestLink);
     })();
   </script>
 </body>
