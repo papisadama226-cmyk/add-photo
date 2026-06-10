@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ADD.HD</title>
-  <meta name="description" content="ADD.HD - Partage photo, description et lien WhatsApp." />
+  <meta name="description" content="ADD.HD - partage photo, texte et lien WhatsApp." />
   <meta name="theme-color" content="#128C7E" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="ADD.HD" />
   <meta name="mobile-web-app-capable" content="yes" />
 
@@ -14,97 +15,152 @@
     :root{
       --bg:#0f172a;
       --card:#111827;
-      --muted:#94a3b8;
-      --text:#f8fafc;
+      --soft:#0b1220;
       --line:#334155;
+      --text:#f8fafc;
+      --muted:#94a3b8;
       --accent:#25D366;
-      --accent2:#128C7E;
-      --btn:#1d4ed8;
+      --accentDark:#128C7E;
+      --blue:#2563eb;
       --warn:#f59e0b;
       --danger:#ef4444;
       --radius:18px;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg,#08111f,#0f172a);
-      color:var(--text);
       padding:18px;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#08111f,#0f172a);
     }
-    .app{max-width:760px;margin:0 auto}
+
+    .app{
+      max-width:780px;
+      margin:0 auto;
+    }
+
     .card{
-      background:rgba(17,24,39,.94);
+      background:rgba(17,24,39,.96);
       border:1px solid rgba(255,255,255,.08);
       border-radius:24px;
       overflow:hidden;
       box-shadow:0 20px 50px rgba(0,0,0,.25);
     }
+
     .top{
-      padding:20px;
       display:flex;
       gap:14px;
       align-items:center;
-      background:linear-gradient(135deg, rgba(37,211,102,.14), rgba(29,78,216,.10));
+      padding:20px;
+      background:linear-gradient(135deg, rgba(37,211,102,.14), rgba(37,99,235,.10));
       border-bottom:1px solid rgba(255,255,255,.08);
     }
+
     .top img{
-      width:72px;height:72px;border-radius:18px;object-fit:cover;background:#fff;
-      border:2px solid rgba(255,255,255,.15);
+      width:72px;
+      height:72px;
+      border-radius:18px;
+      object-fit:cover;
+      background:#fff;
+      border:2px solid rgba(255,255,255,.12);
+      flex-shrink:0;
     }
-    .top h1{margin:0;font-size:28px}
-    .top p{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .content{padding:20px}
-    .field{margin-bottom:16px}
-    label{display:block;font-weight:700;margin-bottom:8px}
-    input, textarea, select, button{
+
+    .top h1{
+      margin:0;
+      font-size:28px;
+    }
+
+    .top p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .content{
+      padding:20px;
+    }
+
+    .field{
+      margin-bottom:16px;
+    }
+
+    label{
+      display:block;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    input, select, textarea, button{
       font:inherit;
     }
-    input, textarea, select{
+
+    input, select, textarea{
       width:100%;
-      border:1px solid var(--line);
-      background:#0b1220;
-      color:var(--text);
-      border-radius:14px;
       padding:14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--soft);
+      color:var(--text);
       outline:none;
     }
-    textarea{min-height:120px;resize:vertical}
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
     .phone{
       display:grid;
       grid-template-columns:220px 1fr;
       gap:12px;
     }
+
     .preview{
       margin-top:18px;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:#0b1220;
       display:flex;
       gap:14px;
       align-items:center;
-    }
-    .preview img{
-      width:88px;height:88px;border-radius:18px;object-fit:cover;background:#111;
+      padding:14px;
+      border-radius:18px;
+      background:var(--soft);
       border:1px solid rgba(255,255,255,.08);
     }
+
+    .preview img{
+      width:88px;
+      height:88px;
+      border-radius:18px;
+      object-fit:cover;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+    }
+
     .preview .title{
       font-size:18px;
       font-weight:700;
       margin-bottom:6px;
+      word-break:break-word;
     }
+
     .preview .sub{
       color:var(--muted);
       margin-bottom:6px;
       word-break:break-word;
+      line-height:1.45;
     }
+
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       margin-top:18px;
     }
+
     button{
       border:none;
       border-radius:14px;
@@ -112,36 +168,52 @@
       cursor:pointer;
       font-weight:700;
     }
-    .primary{background:var(--accent);color:#062b15}
-    .secondary{background:var(--btn);color:#fff}
-    .dark{background:#0b1220;color:#fff;border:1px solid var(--line)}
-    .warn{background:var(--warn);color:#111}
+
+    .primary{background:var(--accent);color:#062b15;}
+    .secondary{background:var(--blue);color:#fff;}
+    .dark{background:var(--soft);color:#fff;border:1px solid var(--line);}
+    .warn{background:var(--warn);color:#111827;}
+    .danger{background:var(--danger);color:#fff;}
+
     .output{
       margin-top:18px;
-      background:#0b1220;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
       padding:14px;
+      border-radius:18px;
+      background:var(--soft);
+      border:1px solid rgba(255,255,255,.08);
     }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+      margin-top:8px;
+    }
+
     .status{
-      margin-top:10px;
       min-height:20px;
+      margin-top:10px;
       font-weight:700;
     }
-    .ok{color:#4ade80}
-    .err{color:#f87171}
-    .small{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+
+    .ok{color:#4ade80;}
+    .err{color:#f87171;}
+
     .install{
       margin-top:18px;
       padding:14px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(135deg, rgba(37,211,102,.08), rgba(29,78,216,.08));
+      background:linear-gradient(135deg, rgba(37,211,102,.08), rgba(37,99,235,.08));
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
     }
+
     @media (max-width:640px){
-      .phone{grid-template-columns:1fr}
-      .preview{align-items:flex-start}
-      .top h1{font-size:24px}
+      .phone{grid-template-columns:1fr;}
+      .top h1{font-size:24px;}
+      .preview{align-items:flex-start;}
     }
   </style>
 </head>
@@ -149,10 +221,10 @@
   <div class="app">
     <div class="card">
       <div class="top">
-        <img src="[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)" alt="ADD.HD" />
+        <img id="appLogo" alt="Logo ADD.HD" />
         <div>
           <h1>ADD.HD</h1>
-          <p>Partage une photo, une description et un lien WhatsApp fonctionnel.</p>
+          <p>Ajoute une photo, un contact, une description et partage un lien WhatsApp prêt à l'emploi.</p>
         </div>
       </div>
 
@@ -164,7 +236,7 @@
 
         <div class="field">
           <label for="name">Nom</label>
-          <input type="text" id="name" placeholder="Ex: IB Gaucher" />
+          <input type="text" id="name" placeholder="Ex: Adama" />
         </div>
 
         <div class="field">
@@ -212,18 +284,18 @@
         <div class="field">
           <label for="number">Numéro</label>
           <div class="phone">
-            <input type="text" id="indicatif" readonly value="+225" />
-            <input type="tel" id="number" placeholder="Ex: 0103552588" />
+            <input type="text" id="indicatif" value="+225" readonly />
+            <input type="tel" id="number" placeholder="Ex: 0706716640" />
           </div>
         </div>
 
         <div class="field">
-          <label for="message">Description / Message</label>
-          <textarea id="message" placeholder="Ex: salut la famille, moi c'est IB Gaucher..."></textarea>
+          <label for="message">Description / Message à partager</label>
+          <textarea id="message" placeholder="Ex: Salut c'est solitaire"></textarea>
         </div>
 
         <div class="preview">
-          <img id="previewPhoto" alt="Aperçu" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjAnIGhlaWdodD0nMTIwJyB2aWV3Qm94PScwIDAgMTIwIDEyMCc+PHJlY3Qgd2lkdGg9JzEyMCcgaGVpZ2h0PScxMjAnIGZpbGw9JyMxMTE4MjcnLz48Y2lyY2xlIGN4PSc2MCcgY3k9JzQ1JyByPScxOCcgZmlsbD0nIzMzNDE1NScvPjxyZWN0IHg9JzI0JyB5PSc3NCcgd2lkdGg9JzcyJyBoZWlnaHQ9JzE4JyByeD0nOScgZmlsbD0nIzMzNDE1NScvPjwvc3ZnPg==" />
+          <img id="previewPhoto" alt="Aperçu photo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjAnIGhlaWdodD0nMTIwJyB2aWV3Qm94PScwIDAgMTIwIDEyMCc+PHJlY3Qgd2lkdGg9JzEyMCcgaGVpZ2h0PScxMjAnIGZpbGw9JyMxMTE4MjcnLz48Y2lyY2xlIGN4PSc2MCcgY3k9JzQ1JyByPScxOCcgZmlsbD0nIzMzNDE1NScvPjxyZWN0IHg9JzI0JyB5PSc3NCcgd2lkdGg9JzcyJyBoZWlnaHQ9JzE4JyByeD0nOScgZmlsbD0nIzMzNDE1NScvPjwvc3ZnPg==" />
           <div>
             <div class="title" id="previewName">Nom non renseigné</div>
             <div class="sub" id="previewNumber">+225</div>
@@ -232,162 +304,210 @@
         </div>
 
         <div class="actions">
-          <button class="primary" id="buildBtn" type="button">Créer le lien</button>
-          <button class="secondary" id="shareBtn" type="button">Partager sur WhatsApp</button>
-          <button class="dark" id="copyBtn" type="button">Copier le lien</button>
-          <button class="warn" id="openBtn" type="button">Ouvrir la discussion</button>
+          <button type="button" class="primary" id="buildBtn">Créer le lien</button>
+          <button type="button" class="secondary" id="shareBtn">Partager</button>
+          <button type="button" class="dark" id="copyBtn">Copier le lien</button>
+          <button type="button" class="warn" id="openBtn">Ouvrir WhatsApp</button>
+          <button type="button" class="danger" id="resetBtn">Réinitialiser</button>
         </div>
 
         <div class="output">
           <label for="result">Lien généré</label>
           <input id="result" readonly placeholder="Le lien wa.me apparaîtra ici..." />
           <div class="small">
-            Le partage enverra l'image si le navigateur et l'appareil le supportent. Sinon, le texte et le lien seront partagés sans image.
+            Quand une personne clique sur ce lien, WhatsApp s'ouvre avec le message automatique déjà écrit.
           </div>
           <div class="status" id="status"></div>
         </div>
 
         <div class="install">
-          Ajoute <strong>ADD.HD</strong> à l'écran d'accueil depuis le menu du navigateur pour l'utiliser comme une application.
+          Pour l'utiliser comme application, ouvre ce fichier sur un hébergement HTTPS puis ajoute <strong>ADD.HD</strong> à l'écran d'accueil depuis le navigateur.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const photoInput = document.getElementById('photo');
-    const nameInput = document.getElementById('name');
-    const countrySelect = document.getElementById('country');
-    const indicatifInput = document.getElementById('indicatif');
-    const numberInput = document.getElementById('number');
-    const messageInput = document.getElementById('message');
-    const previewPhoto = document.getElementById('previewPhoto');
-    const previewName = document.getElementById('previewName');
-    const previewNumber = document.getElementById('previewNumber');
-    const previewMessage = document.getElementById('previewMessage');
-    const resultInput = document.getElementById('result');
-    const statusEl = document.getElementById('status');
+    const LOGO_URL = "[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)";
+
+    const appLogo = document.getElementById("appLogo");
+    const photoInput = document.getElementById("photo");
+    const nameInput = document.getElementById("name");
+    const countrySelect = document.getElementById("country");
+    const indicatifInput = document.getElementById("indicatif");
+    const numberInput = document.getElementById("number");
+    const messageInput = document.getElementById("message");
+    const previewPhoto = document.getElementById("previewPhoto");
+    const previewName = document.getElementById("previewName");
+    const previewNumber = document.getElementById("previewNumber");
+    const previewMessage = document.getElementById("previewMessage");
+    const resultInput = document.getElementById("result");
+    const statusEl = document.getElementById("status");
 
     let photoFile = null;
 
-    function setStatus(text, cls='') {
+    appLogo.src = LOGO_URL;
+    appLogo.onerror = function () {
+      this.src = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns="[w3.org](http://www.w3.org/2000/svg)" width="512" height="512" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="96" fill="#128C7E"/>
+          <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle"
+            font-family="Arial, sans-serif" font-size="110" fill="white" font-weight="700">ADD.HD</text>
+        </svg>
+      `);
+    };
+
+    function setStatus(text, type = "") {
       statusEl.textContent = text;
-      statusEl.className = 'status ' + cls;
+      statusEl.className = "status" + (type ? " " + type : "");
     }
 
     function cleanNumber(value) {
-      return (value || '').replace(/\D/g, '');
+      return (value || "").replace(/\D/g, "");
     }
 
     function updatePreview() {
       indicatifInput.value = countrySelect.value;
-      previewName.textContent = nameInput.value.trim() || 'Nom non renseigné';
-      previewNumber.textContent = countrySelect.value + ' ' + (cleanNumber(numberInput.value) || '');
-      previewMessage.textContent = messageInput.value.trim() || 'La description apparaîtra ici.';
+      previewName.textContent = nameInput.value.trim() || "Nom non renseigné";
+      previewNumber.textContent = countrySelect.value + " " + (cleanNumber(numberInput.value) || "");
+      previewMessage.textContent = messageInput.value.trim() || "La description apparaîtra ici.";
+    }
+
+    function buildAutoMessage() {
+      return "salut j’ai eu ton numéro par add on fait connaissance";
     }
 
     function buildLink() {
       const name = nameInput.value.trim();
-      const phone = cleanNumber(countrySelect.value + numberInput.value);
-      const msg = messageInput.value.trim();
+      const localNumber = cleanNumber(numberInput.value);
+      const phone = cleanNumber(countrySelect.value + localNumber);
+      const sharedDescription = messageInput.value.trim();
 
       if (!name) {
-        setStatus('Ajoute le nom.', 'err');
-        return '';
-      }
-      if (!cleanNumber(numberInput.value)) {
-        setStatus('Ajoute un numéro valide.', 'err');
-        return '';
-      }
-      if (!msg) {
-        setStatus('Ajoute une description.', 'err');
-        return '';
+        setStatus("Ajoute le nom.", "err");
+        return "";
       }
 
-      const text = `Salut, moi c'est ${name}.\n\n${msg}`;
-      const link = `[wa.me](https://wa.me/${phone}?text=${encodeURIComponent(text)})`;
+      if (!localNumber) {
+        setStatus("Ajoute un numéro valide.", "err");
+        return "";
+      }
+
+      if (!sharedDescription) {
+        setStatus("Ajoute une description.", "err");
+        return "";
+      }
+
+      const autoMessage = buildAutoMessage();
+      const link = "[wa.me](https://wa.me/)" + phone + "?text=" + encodeURIComponent(autoMessage);
+
       resultInput.value = link;
-      setStatus('Lien créé avec succès.', 'ok');
+      setStatus("Lien créé avec succès.", "ok");
       return link;
     }
 
-    photoInput.addEventListener('change', (e) => {
+    function resetForm() {
+      photoInput.value = "";
+      nameInput.value = "";
+      countrySelect.value = "+225";
+      indicatifInput.value = "+225";
+      numberInput.value = "";
+      messageInput.value = "";
+      resultInput.value = "";
+      photoFile = null;
+      previewPhoto.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjAnIGhlaWdodD0nMTIwJyB2aWV3Qm94PScwIDAgMTIwIDEyMCc+PHJlY3Qgd2lkdGg9JzEyMCcgaGVpZ2h0PScxMjAnIGZpbGw9JyMxMTE4MjcnLz48Y2lyY2xlIGN4PSc2MCcgY3k9JzQ1JyByPScxOCcgZmlsbD0nIzMzNDE1NScvPjxyZWN0IHg9JzI0JyB5PSc3NCcgd2lkdGg9JzcyJyBoZWlnaHQ9JzE4JyByeD0nOScgZmlsbD0nIzMzNDE1NScvPjwvc3ZnPg==";
+      updatePreview();
+      setStatus("Formulaire réinitialisé.", "ok");
+    }
+
+    photoInput.addEventListener("change", (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
+
       photoFile = file;
+
       const reader = new FileReader();
       reader.onload = () => {
         previewPhoto.src = reader.result;
+        setStatus("Photo ajoutée.", "ok");
+      };
+      reader.onerror = () => {
+        setStatus("Impossible de lire la photo.", "err");
       };
       reader.readAsDataURL(file);
-      setStatus('Photo ajoutée.', 'ok');
     });
 
-    [nameInput, numberInput, messageInput].forEach(el => {
-      el.addEventListener('input', updatePreview);
+    [nameInput, numberInput, messageInput].forEach((el) => {
+      el.addEventListener("input", updatePreview);
     });
 
-    countrySelect.addEventListener('change', updatePreview);
+    countrySelect.addEventListener("change", updatePreview);
 
-    document.getElementById('buildBtn').addEventListener('click', buildLink);
+    document.getElementById("buildBtn").addEventListener("click", buildLink);
 
-    document.getElementById('copyBtn').addEventListener('click', async () => {
+    document.getElementById("copyBtn").addEventListener("click", async () => {
       const link = resultInput.value || buildLink();
       if (!link) return;
+
       try {
         await navigator.clipboard.writeText(link);
-        setStatus('Lien copié.', 'ok');
-      } catch {
-        setStatus('Copie impossible sur cet appareil.', 'err');
+        setStatus("Lien copié.", "ok");
+      } catch (e) {
+        setStatus("Copie impossible sur cet appareil.", "err");
       }
     });
 
-    document.getElementById('openBtn').addEventListener('click', () => {
+    document.getElementById("openBtn").addEventListener("click", () => {
       const link = resultInput.value || buildLink();
       if (!link) return;
-      window.open(link, '_blank');
+      window.open(link, "_blank");
     });
 
-    document.getElementById('shareBtn').addEventListener('click', async () => {
+    document.getElementById("shareBtn").addEventListener("click", async () => {
       const link = resultInput.value || buildLink();
       if (!link) return;
 
       const name = nameInput.value.trim();
-      const msg = messageInput.value.trim();
-      const fullText = `${msg}\n\nContacter ${name} sur WhatsApp :\n${link}`;
+      const desc = messageInput.value.trim();
+      const textToShare =
+        desc +
+        "\\n\\nContacter " + name + " sur WhatsApp :\\n" +
+        link;
 
       try {
         if (photoFile) {
-          const fileToShare = new File([photoFile], photoFile.name || 'photo.jpg', {
-            type: photoFile.type || 'image/jpeg'
+          const fileToShare = new File([photoFile], photoFile.name || "photo.jpg", {
+            type: photoFile.type || "image/jpeg"
           });
 
           if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
             await navigator.share({
-              title: 'ADD.HD',
-              text: fullText,
+              title: "ADD.HD",
+              text: textToShare,
               files: [fileToShare]
             });
-            setStatus('Partage effectué avec image, description et lien.', 'ok');
+            setStatus("Partage effectué avec photo, description et lien.", "ok");
             return;
           }
         }
 
         if (navigator.share) {
           await navigator.share({
-            title: 'ADD.HD',
-            text: fullText,
+            title: "ADD.HD",
+            text: textToShare,
             url: link
           });
-          setStatus('Partage effectué.', 'ok');
+          setStatus("Partage effectué.", "ok");
         } else {
-          await navigator.clipboard.writeText(fullText);
-          setStatus('Partage natif indisponible. Le texte a été copié.', 'ok');
+          await navigator.clipboard.writeText(textToShare + "\\n" + link);
+          setStatus("Partage indisponible. Texte copié.", "ok");
         }
       } catch (e) {
-        setStatus('Partage annulé ou non pris en charge.', 'err');
+        setStatus("Partage annulé ou non pris en charge.", "err");
       }
     });
+
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
 
     updatePreview();
 
@@ -400,24 +520,27 @@
       theme_color: "#128C7E",
       icons: [
         {
-          src: "[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)",
+          src: LOGO_URL,
           sizes: "192x192",
           type: "image/png"
         },
         {
-          src: "[i.ibb.co](https://i.ibb.co/6Jv0JwL/addhd-logo.png)",
+          src: LOGO_URL,
           sizes: "512x512",
           type: "image/png"
         }
       ]
     };
 
-    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-    const manifestURL = URL.createObjectURL(blob);
-    const linkEl = document.createElement('link');
-    linkEl.rel = 'manifest';
-    linkEl.href = manifestURL;
-    document.head.appendChild(linkEl);
+    const manifestBlob = new Blob([JSON.stringify(manifest)], {
+      type: "application/manifest+json"
+    });
+
+    const manifestURL = URL.createObjectURL(manifestBlob);
+    const manifestLink = document.createElement("link");
+    manifestLink.rel = "manifest";
+    manifestLink.href = manifestURL;
+    document.head.appendChild(manifestLink);
   </script>
 </body>
 </html>
